@@ -1,56 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useEffect } from "react";
+import "./App.css";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import { Header } from "./components/Header";
+import { Courses } from "./pages/Courses";
+import { useDispatch } from "react-redux";
+import { fetchData, error } from "./app/actions";
+import { Converter } from "./pages/Converter";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetch("https://www.cbr-xml-daily.ru/daily_json.js")
+      .then((res) => res.json())
+      .then((data) => dispatch(fetchData(data)))
+      .catch((err) => dispatch(error()));
+  }, [dispatch]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <Router>
+        <Header />
+        <Switch>
+          <Route path="/converter">
+            <Converter />
+          </Route>
+          <Route path="/current-courses">
+            <Courses />
+          </Route>
+          <Route path="/">
+            <Redirect to="/current-courses" />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }

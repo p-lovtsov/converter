@@ -1,0 +1,15 @@
+.currencies {
+  margin: 0;
+}
+
+.favorite-currencies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.unFavoriteCurrencies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
